@@ -27,7 +27,7 @@ jobs:
           APPLE_TEAM_ID: ${{ vars.APPLE_TEAM_ID }}
           TOPBAR_SIGNING_IDENTITY: ${{ vars.TOPBAR_SIGNING_IDENTITY }}
         run: zsh scripts/ci-release.sh
-      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: BarLuma-notarized-release
           path: |
