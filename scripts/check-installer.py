@@ -21,6 +21,9 @@ with tempfile.TemporaryDirectory(prefix='barluma-package-check-') as temporary:
     require(domains.get('enable_localSystem') == 'false' and domains.get('enable_anywhere') == 'false', 'System/other-volume installation is prohibited')
     require(distribution.find('license') is None, 'No license acceptance screen is permitted')
     require(distribution.find('script') is None, 'No distribution scripts are permitted')
+    for name in ['Welcome.rtf', 'Conclusion.rtf']:
+        resources = list(expanded.rglob(name))
+        require(len(resources) == 1 and resources[0].read_bytes().startswith(b'{\\rtf1'), 'Native RTF installer text is required')
     infos = list(expanded.rglob('PackageInfo'))
     require(len(infos) == 1, 'Exactly one payload component is required')
     info = ET.parse(infos[0]).getroot()
