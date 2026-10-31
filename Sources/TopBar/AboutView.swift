@@ -4,7 +4,7 @@ enum AppInformation {
     static let name = "BarLuma"
     static let enterpriseEmail = "Abdullah.n.sy@gmail.com"
     static let repositoryURL = URL(string: "https://github.com/AbdullahNazih/BarLuma")!
-    static let releasesURL = repositoryURL.appendingPathComponent("releases").appendingPathComponent("latest")
+    static let releasesURL = repositoryURL.appendingPathComponent("releases")
     static let description = "A lightweight macOS menu bar companion for download and upload speeds in Mbps, CPU and RAM utilization, and local weather. Choose which readings appear, use automatic or selected weather locations, and adjust the refresh interval to suit your Mac."
     static var version: String {
         Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "Development"
@@ -44,7 +44,7 @@ struct AboutView: View {
                 VStack(alignment: .leading, spacing: 5) {
                     HStack(spacing: 14) {
                         Link("Check for Updates…", destination: AppInformation.releasesURL)
-                            .help("Open the latest GitHub release. Updates are installed manually.")
+                            .help("Open GitHub releases, including previews. Updates are installed manually.")
                         Link("GitHub project", destination: AppInformation.repositoryURL)
                     }.font(.subheadline)
                     Text("On GitHub, choose Watch → Custom → Releases to receive update notifications.")

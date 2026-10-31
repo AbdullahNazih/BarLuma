@@ -68,9 +68,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
             let condition = model.weatherCondition
             let symbol = condition?.symbol ?? (prefs.location == nil ? "location.circle" : "cloud.badge.exclamationmark")
             if button.image?.accessibilityDescription != symbol {
-                let image = NSImage(systemSymbolName: symbol, accessibilityDescription: symbol)
-                image?.isTemplate = true
-                button.image = image
+                button.image = WeatherAppearance.image(for: symbol)
             }
             button.imagePosition = .imageLeading
             setTitle(prefs.temperature ? model.weather.flatMap { $0.isStale ? nil : " \($0.temperatureText) " } ?? " — " : "", button: button)

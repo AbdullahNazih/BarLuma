@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1 — 31 October 2026
+
+* Colored weather icons in the menu bar, dashboard and Settings: yellow sun, silver-gray moon/clouds, blue rain and cyan snow.
+* Single-file unsigned preview installer for Apple silicon and Intel. Installs only in the current user's Applications folder, without install scripts or a license-acceptance screen.
+* Installer inspection and color regression checks added to CI. Official notarized binary releases still require Developer ID credentials.
+
 ## 1.1.0 — 31 October 2026
 
 Initial public source release under the name **BarLuma**, previously MAC OSx - TopBar.

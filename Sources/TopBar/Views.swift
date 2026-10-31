@@ -32,7 +32,7 @@ struct DashboardView: View {
                 Divider().padding(.leading, 42)
                 MetricRow(title: "Memory", symbol: "memorychip", detail: DisplayFormat.percent(model.memory?.percent), enabled: $model.preferences.memory)
                 Divider().padding(.leading, 42)
-                MetricRow(title: "Weather", symbol: model.weatherCondition?.symbol ?? "cloud", detail: weatherDetail, enabled: $model.preferences.weather)
+                MetricRow(title: "Weather", symbol: model.weatherCondition?.symbol ?? "cloud", detail: weatherDetail, enabled: $model.preferences.weather, usesWeatherPalette: true)
             }
             .padding(.horizontal, 12).background(.quaternary.opacity(0.45), in: RoundedRectangle(cornerRadius: 14))
             HStack(spacing: 6) {
@@ -68,10 +68,16 @@ private struct MetricRow: View {
     let symbol: String
     let detail: String
     @Binding var enabled: Bool
+    var usesWeatherPalette = false
 
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: symbol).font(.system(size: 17)).foregroundStyle(enabled ? mint : .secondary).frame(width: 25)
+            if usesWeatherPalette && enabled {
+                Image(nsImage: WeatherAppearance.image(for: symbol) ?? NSImage())
+                    .resizable().scaledToFit().frame(width: 25, height: 22).accessibilityLabel(title)
+            } else {
+                Image(systemName: symbol).font(.system(size: 17)).foregroundStyle(enabled ? mint : .secondary).frame(width: 25)
+            }
             VStack(alignment: .leading, spacing: 4) {
                 Text(title).font(.system(size: 13, weight: .medium))
                 Text(enabled ? detail : "Hidden from menu bar").font(.system(size: 11).monospacedDigit()).foregroundStyle(.secondary)
@@ -117,7 +123,7 @@ struct SettingsView: View {
                         Divider().padding(.leading, 42)
                         MetricRow(title: "RAM utilization", symbol: "memorychip", detail: memoryDetail, enabled: $model.preferences.memory)
                         Divider().padding(.leading, 42)
-                        MetricRow(title: "Local weather", symbol: model.weatherCondition?.symbol ?? "cloud.sun", detail: "Sun, moon, clouds, rain and more", enabled: $model.preferences.weather)
+                        MetricRow(title: "Local weather", symbol: model.weatherCondition?.symbol ?? "cloud.sun.fill", detail: "Sun, moon, clouds, rain and more", enabled: $model.preferences.weather, usesWeatherPalette: true)
                     }.padding(.horizontal, 16).background(.quaternary.opacity(0.35), in: RoundedRectangle(cornerRadius: 16))
 
                     if model.preferences.weather {
@@ -152,7 +158,8 @@ struct SettingsView: View {
                             }
                             if let location = model.preferences.location {
                                 HStack(alignment: .top) {
-                                    Image(systemName: model.weatherCondition?.symbol ?? "cloud").font(.title2).foregroundStyle(mint)
+                                    Image(nsImage: WeatherAppearance.image(for: model.weatherCondition?.symbol ?? "cloud") ?? NSImage())
+                                        .resizable().scaledToFit().frame(width: 28, height: 28)
                                     VStack(alignment: .leading, spacing: 4) {
                                         Text(location.label).fontWeight(.medium)
                                         if let weather = model.weather {

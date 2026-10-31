@@ -12,7 +12,7 @@ case "$BUILD_MODE" in
         ;;
     *) echo 'TOPBAR_BUILD_MODE must be local or distribution.' >&2; exit 1 ;;
 esac
-if [[ "$BUILD_MODE" == distribution ]]; then
+if [[ "$BUILD_MODE" == distribution || "${BARLUMA_UNIVERSAL:-0}" == 1 ]]; then
     binaries=()
     for architecture in arm64 x86_64; do
         swift build -c release --arch "$architecture" --disable-sandbox --cache-path .build/cache
