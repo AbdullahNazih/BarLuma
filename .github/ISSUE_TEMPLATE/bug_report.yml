@@ -1,0 +1,34 @@
+name: Report a bug
+description: Help us reproduce a problem with BarLuma.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: "For security vulnerabilities, use private reporting instead. Please redact personal data, locations and sensitive logs."
+  - type: input
+    id: version
+    attributes:
+      label: BarLuma version
+      description: Find this in About.
+      placeholder: 1.1.1
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: macOS version and Mac type
+      placeholder: macOS 26, Apple silicon
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: What did you do, what happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional details
+      description: Relevant settings or redacted screenshots, if helpful.
