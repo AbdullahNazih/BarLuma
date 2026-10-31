@@ -1,0 +1,37 @@
+name: Signed and notarized release
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  release:
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    environment: release
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Test before loading signing credentials
+        run: |
+          zsh scripts/test.sh
+          zsh scripts/build.sh
+          BARLUMA_REQUIRE_NETWORK=1 zsh scripts/sandbox-smoke.sh
+      - name: Sign, notarize, staple and verify
+        env:
+          APPLE_CERTIFICATE_P12_BASE64: ${{ secrets.APPLE_CERTIFICATE_P12_BASE64 }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ vars.APPLE_TEAM_ID }}
+          TOPBAR_SIGNING_IDENTITY: ${{ vars.TOPBAR_SIGNING_IDENTITY }}
+        run: zsh scripts/ci-release.sh
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: BarLuma-notarized-release
+          path: |
+            dist/BarLuma-v*.zip
+            dist/BarLuma-v*.zip.sha256
+          if-no-files-found: error
+          retention-days: 14

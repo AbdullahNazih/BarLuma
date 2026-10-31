@@ -1,0 +1,31 @@
+name: Build and security checks
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Validate scripts
+        run: |
+          for script in scripts/*.sh; do zsh -n "$script"; done
+          python3 -m py_compile scripts/check-security.py
+          plutil -lint Resources/Info.plist Resources/TopBar.entitlements
+      - name: Functional and adversarial input checks
+        run: zsh scripts/test.sh
+      - name: Build sandboxed application and verify protections
+        run: zsh scripts/build.sh
+      - name: Verify sandbox isolation and local metric access
+        env:
+          BARLUMA_REQUIRE_NETWORK: '1'
+        run: zsh scripts/sandbox-smoke.sh
