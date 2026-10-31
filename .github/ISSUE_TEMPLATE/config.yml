@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Read the user guide
+    url: https://github.com/AbdullahNazih/BarLuma/blob/main/docs/USER_GUIDE.md
+    about: Installation, weather permissions, updates and uninstall help.
+  - name: Report a security vulnerability privately
+    url: https://github.com/AbdullahNazih/BarLuma/security/advisories/new
+    about: Do not post vulnerabilities or sensitive information in public issues.
