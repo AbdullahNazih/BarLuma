@@ -15,6 +15,14 @@ Each module has its own on/off switch. Click a reading to open the movable dashb
 
 ## Getting started without an Apple Developer account
 
+### Single-file preview installer
+
+For a local preview, run `zsh scripts/package-preview.sh` to produce `dist/BarLuma-1.1.1-preview.pkg`. Double-click that file and follow macOS Installer's prompts. It installs the universal Apple silicon/Intel app into **your `~/Applications` folder**. Open BarLuma from Spotlight or that folder after installation. No Terminal commands are needed by the installer user, and there is no license-acceptance screen or install script.
+
+This package is **unsigned and not notarized**. macOS may warn or block it; packaging does not change its trust status. It is a development preview, not the future verified public distribution build. The installer does not alter Gatekeeper or other security settings. It records a standard macOS package receipt; those OS-managed receipts may remain after app uninstall.
+
+### Build from source
+
 You can publish this source repository, run CI, and build locally without a paid Apple Developer account. Requires macOS 13 or later and Swift 6.2 or newer. Install Apple's Command Line Tools if needed:
 
 ```sh
@@ -68,7 +76,7 @@ The app unregisters its login item, stops work, moves app-owned caches/support f
 
 ## Verification and contributing
 
-`zsh scripts/test.sh` runs sixteen checks including malicious numeric inputs, endpoint/redirect/response-size policy, location persistence, uninstall authorization, display placement, metric calculations and real macOS metric readers. `zsh scripts/sandbox-smoke.sh` checks CPU/RAM access and denial of a known-readable file outside the sandbox; use `BARLUMA_REQUIRE_NETWORK=1` on a connected Mac to also require network counter access.
+`zsh scripts/test.sh` runs seventeen checks including weather icon colors, malicious numeric inputs, endpoint/redirect/response-size policy, location persistence, uninstall authorization, display placement, metric calculations and real macOS metric readers. `zsh scripts/sandbox-smoke.sh` checks CPU/RAM access and denial of a known-readable file outside the sandbox; use `BARLUMA_REQUIRE_NETWORK=1` on a connected Mac to also require network counter access.
 
 The optional `zsh scripts/test.sh --live-weather` validates real weather and city-search responses with fixed, non-personal inputs. Tests do not replace independent review or clean-machine testing on all supported systems. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
@@ -76,6 +84,6 @@ The internal executable remains `TopBar` and the bundle identifier remains `com.
 
 ## Update notifications
 
-Choose **About → Check for Updates…** to open the [latest GitHub release](https://github.com/AbdullahNazih/BarLuma/releases/latest). To receive GitHub notifications, open the [repository](https://github.com/AbdullahNazih/BarLuma), choose **Watch → Custom**, enable **Releases**, and save. GitHub delivers notifications according to your account settings. A new commit alone is not an update notification; a maintainer publishes a new Release.
+Choose **About → Check for Updates…** to open the [latest GitHub release](https://github.com/AbdullahNazih/BarLuma/releases). To receive GitHub notifications, open the [repository](https://github.com/AbdullahNazih/BarLuma), choose **Watch → Custom**, enable **Releases**, and save. GitHub delivers notifications according to your account settings. A new commit alone is not an update notification; a maintainer publishes a new Release.
 
 The current app performs no background update checks and does not download or execute updates. Initial GitHub releases provide source and local build instructions. Developer ID signing/notarization and a securely signed updater can be added later; an Apple Developer account does not itself implement an updater. See [UPDATING.md](UPDATING.md).

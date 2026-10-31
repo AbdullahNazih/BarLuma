@@ -29,3 +29,5 @@ jobs:
         env:
           BARLUMA_REQUIRE_NETWORK: '1'
         run: zsh scripts/sandbox-smoke.sh
+      - name: Build and inspect unsigned user-only preview installer
+        run: zsh scripts/package-preview.sh

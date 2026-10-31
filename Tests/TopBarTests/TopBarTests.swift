@@ -1,5 +1,6 @@
 import Foundation
 import CoreGraphics
+import AppKit
 
 private var failures = 0
 private func XCTAssertTrue(_ condition: Bool, file: StaticString = #filePath, line: UInt = #line) {
@@ -20,6 +21,17 @@ private func assertRejected<T>(_ operation: () throws -> T, file: StaticString =
 }
 
 final class TopBarTests {
+    func testWeatherImagesPreserveTheirConditionColors() throws {
+        for code in WeatherSecurity.validCodes {
+            for isDay in [true, false] {
+                let condition = WeatherCondition.from(code: code, isDay: isDay)
+                let image = try XCTUnwrap(WeatherAppearance.image(for: condition.symbol))
+                XCTAssertFalse(image.isTemplate)
+            }
+        }
+        XCTAssertEqual(WeatherAppearance.palette(for: "sun.max.fill"), [.systemYellow])
+        XCTAssertEqual(WeatherAppearance.palette(for: "moon.stars.fill"), [.systemGray, .systemGray])
+    }
     func testWeatherEndpointsRejectUntrustedDestinations() {
         XCTAssertTrue(WeatherSecurity.allowed(URL(string: "https://api.open-meteo.com/v1/forecast?latitude=0&longitude=0")!))
         XCTAssertTrue(WeatherSecurity.allowed(URL(string: "https://geocoding-api.open-meteo.com/v1/search?name=London")!))
@@ -209,6 +221,7 @@ final class TopBarTests {
 struct TestRunner {
     static func main() async throws {
         let tests = TopBarTests()
+        try tests.testWeatherImagesPreserveTheirConditionColors()
         tests.testWeatherEndpointsRejectUntrustedDestinations()
         try tests.testWeatherResponsePolicyAndStreamingLimit()
         tests.testWeatherRedirectsAreRefused()
@@ -226,7 +239,7 @@ struct TestRunner {
         try tests.testWeatherPayloadAndCacheRoundTrip()
         try tests.testLiveSystemReadersReturnValidValues()
         guard failures == 0 else { exit(1) }
-        print("PASS: 16 checks covering malicious weather inputs, endpoint/redirect/size policy, location privacy, uninstall scope, screen margins, metrics and cache handling.")
+        print("PASS: 17 checks covering weather colors, malicious inputs, endpoint/redirect/size policy, location privacy, uninstall scope, screen margins, metrics and cache handling.")
         if CommandLine.arguments.contains("--live-weather") {
             let location = WeatherLocation(id: 1, name: "Test location", latitude: 0, longitude: 0, country: nil, admin1: nil)
             let weather = try await WeatherAPI.weather(at: location)
